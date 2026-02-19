@@ -1,0 +1,227 @@
+/*
+====================================================
+Ionic CSS Variables – SG Gierath
+====================================================
+*/
+
+:root {
+
+  /* ===== Primary ===== */
+  --ion-color-primary: #ffc400;
+  --ion-color-primary-rgb: 244, 196, 0;
+  --ion-color-primary-contrast: #000000;
+  --ion-color-primary-contrast-rgb: 0, 0, 0;
+  --ion-color-primary-shade: #dfac00;
+  --ion-color-primary-tint: #f6ce33;
+
+  /* ===== Secondary ===== */
+  --ion-color-secondary: #1c1c1c;
+  --ion-color-secondary-rgb: 28, 28, 28;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #191919;
+  --ion-color-secondary-tint: #333333;
+
+  /* ===== Success ===== */
+  --ion-color-success: #2dd36f;
+  --ion-color-success-rgb: 45, 211, 111;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #28ba62;
+  --ion-color-success-tint: #42d77d;
+
+  /* ===== Warning ===== */
+  --ion-color-warning: #ffc409;
+  --ion-color-warning-rgb: 255, 196, 9;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #e0ac08;
+  --ion-color-warning-tint: #ffca22;
+
+  /* ===== Danger ===== */
+  --ion-color-danger: #eb445a;
+  --ion-color-danger-rgb: 235, 68, 90;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #cf3c4f;
+  --ion-color-danger-tint: #ed576b;
+
+  /* ===== Base ===== */
+  --ion-background-color: #ffffff;
+  --ion-text-color: #111111;
+  --ion-card-background: #ffffff;
+  --ion-item-background: #ffffff;
+
+  /* ===== Typography ===== */
+  --ion-font-family: -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* ===== Global Radius ===== */
+  --ion-border-radius: 16px;
+}
+
+
+/* ====================================================
+   🔵 SG App Optimierungen (kein TS notwendig)
+   ==================================================== */
+
+/* Karten moderner */
+ion-card {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* Bilder in Cards abrunden */
+ion-card img,
+ion-img img {
+  border-radius: 16px;
+}
+
+/* Falls Bild oben in eigener Section liegt */
+.card-image {
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+/* Datum dezenter */
+.post-date {
+  opacity: 0.7;
+  font-size: 13px;
+}
+
+/* ID Badge ausblenden (live01 etc.) */
+ion-badge:last-of-type {
+  display: none !important;
+}
+
+/* Falls ID eigene Klasse hat (optional) */
+.post-id {
+  display: none !important;
+}
+
+/* Titel etwas eleganter */
+h2, h3 {
+  letter-spacing: -0.3px;
+}
+
+/* Text etwas ruhiger */
+p {
+  line-height: 1.5;
+}
+/* SG Gierath – Mini Fix: Bild abrunden */
+ion-card ion-img::part(image),
+ion-card img {
+  border-radius: 16px;
+}
+
+/* SG Gierath – Mini Fix: ID-Badge (live01) ausblenden */
+ion-card ion-badge:last-of-type {
+  display: none !important;
+}
+/* Bild in IonCard sauber abrunden */
+ion-card ion-img::part(image) {
+  border-radius: 16px !important;
+}
+/* Bildbereich in Cards abrunden: Wrapper “clippt” alles */
+ion-card .image,
+ion-card .img,
+ion-card .header,
+ion-card .media,
+ion-card .preview,
+ion-card .cover {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+
+/* falls es wirklich ein <img> ist */
+ion-card img {
+  border-radius: 16px !important;
+}
+/* =========================================================
+   SG Gierath – Mini Fix (ohne TS/JS Änderungen)
+   ========================================================= */
+
+/* 1) ID-Chip (live01) ausblenden
+   Hinweis: In deinem Layout ist "live01" ein ion-chip, kein ion-badge.
+*/
+ion-card ion-chip:last-of-type {
+  display: none !important;
+}
+
+/* 2) Oberes Bild-Panel in der Card abrunden
+   Das Bild sitzt in einem Wrapper (helles Rechteck). Der Wrapper muss clippen.
+*/
+ion-card > div:first-of-type {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+
+/* Optional: falls das Bild ein <img> ist, zusätzlich abrunden */
+ion-card img {
+  border-radius: 16px !important;
+}
+/* ================================
+   SG Gierath – FINAL FIX
+   ================================ */
+
+/* Bild-Container abrunden */
+ion-card > *:first-child {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+/* Bild-Wrapper innerhalb der Card abrunden (typisch: erstes Element im Card-Content) */
+ion-card ion-card-content > *:first-child {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+/* Versucht den ersten Block mit Hintergrund (Bild-Panel) zu clippen */
+ion-card ion-card-content > div:first-child,
+ion-card ion-card-content > ion-grid:first-child,
+ion-card ion-card-content > ion-grid:first-child ion-row:first-child,
+ion-card ion-card-content > ion-grid:first-child ion-row:first-child ion-col:first-child {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+/* Entfernt das rechte “Pill”-Label, egal ob div/span */
+ion-card *[class*="id"],
+ion-card *[class*="live"],
+ion-card *[class*="chip"],
+ion-card *[class*="badge"] {
+  /* nicht alles killen, nur wenn es wirklich ein kleines Label ist */
+}
+/* ===== SG Gierath: nur Optik-Fix ===== */
+
+/* 1) ID-Pill (live01 / demo5) ausblenden */
+ion-card ion-chip:last-of-type,
+ion-card ion-badge:last-of-type,
+ion-card ion-label:last-of-type {
+  display: none !important;
+}
+
+/* 2) Bild-Panel clippen (damit die Ecken wirklich rund sind) */
+ion-card ion-card-content > *:first-child {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+
+/* 3) Bild selbst abrunden */
+ion-card img {
+  border-radius: 16px !important;
+}
+/* ===== LETZTER VERSUCH (Ionic Slot-Variante) ===== */
+
+/* 1) Rechte ID-Pill ausblenden (wenn sie im End-Slot sitzt) */
+ion-card ion-chip[slot="end"],
+ion-card ion-badge[slot="end"],
+ion-card ion-label[slot="end"] {
+  display: none !important;
+}
+
+/* 2) Bild-Panel clippen (wenn es als Grid im ersten Block liegt) */
+ion-card ion-grid:first-child,
+ion-card ion-grid:first-child ion-row:first-child,
+ion-card ion-grid:first-child ion-col:first-child {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
