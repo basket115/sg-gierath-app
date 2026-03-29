@@ -47,7 +47,7 @@ export type FeedRow = {
 };
 
 const FEED_URL =
-  "https://script.google.com/macros/s/AKfycbysu_UVqQv4QjK5_NdCdq3WtfUjYH448OzPyYGDbXIshyNcLI6yhoKxwYD7lKjF-9PFhQ/exec";
+  "https://script.google.com/macros/s/AKfycbwm0nO0XRsJD2gqWTbfZvRHdKTN0ylbJrWkJt66TcCCiBkX8l7aaV2lF5saHEBwwqeUoA/exec?action=get_beitraege&kundenId=V046";
 
 function cleanStr(v: any): string | undefined {
   if (v === null || v === undefined) return undefined;
