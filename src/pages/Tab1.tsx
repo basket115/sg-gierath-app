@@ -1,4 +1,4 @@
-// src/pages/Tab1.tsx v13
+// src/pages/Tab1.tsx v14
 import React, { useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import AppHeader from '../components/AppHeader';
 import CategoriesComponent from '../components/CategoriesComponent';
@@ -216,11 +216,7 @@ const SponsorPopup: React.FC<{ kundenId: string; themaFarbe: string; onClose: ()
     setSuccess('');
     try {
       const params = new URLSearchParams({
-        action: 'update_sponsor',
-        kundenId,
-        logoUrl,
-        bannerText,
-        linkUrl,
+        action: 'update_sponsor', kundenId, logoUrl, bannerText, linkUrl,
       });
       const res = await fetch(`${API_EXEC_URL}?${params}`);
       const data = await res.json();
@@ -254,49 +250,26 @@ const SponsorPopup: React.FC<{ kundenId: string; themaFarbe: string; onClose: ()
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div>
-            <label style={{ fontSize: 13, fontWeight: 600, color: '#555', display: 'block', marginBottom: 4 }}>
-              Logo URL (Imgur .jpeg empfohlen)
-            </label>
-            <input
-              value={logoUrl}
-              onChange={(e: any) => setLogoUrl(e.target.value)}
-              placeholder="https://i.imgur.com/..."
-              style={{ width: '100%', padding: 10, borderRadius: 8, border: '1px solid #ddd', fontSize: 14, boxSizing: 'border-box' as const, color: '#111' }}
-            />
-            {logoUrl && (
-              <img src={logoUrl} alt="Vorschau" style={{ marginTop: 8, height: 48, objectFit: 'contain', borderRadius: 6, border: '1px solid #eee' }} />
-            )}
+            <label style={{ fontSize: 13, fontWeight: 600, color: '#555', display: 'block', marginBottom: 4 }}>Logo URL</label>
+            <input value={logoUrl} onChange={(e: any) => setLogoUrl(e.target.value)} placeholder="https://i.imgur.com/..."
+              style={{ width: '100%', padding: 10, borderRadius: 8, border: '1px solid #ddd', fontSize: 14, boxSizing: 'border-box' as const, color: '#111' }} />
+            {logoUrl && <img src={logoUrl} alt="Vorschau" style={{ marginTop: 8, height: 48, objectFit: 'contain', borderRadius: 6, border: '1px solid #eee' }} />}
           </div>
           <div>
-            <label style={{ fontSize: 13, fontWeight: 600, color: '#555', display: 'block', marginBottom: 4 }}>
-              Banner Text
-            </label>
-            <textarea
-              value={bannerText}
-              onChange={(e: any) => setBannerText(e.target.value)}
-              placeholder="Partner für unsere Vereins-App..."
-              rows={4}
-              style={{ width: '100%', padding: 10, borderRadius: 8, border: '1px solid #ddd', fontSize: 14, boxSizing: 'border-box' as const, color: '#111', resize: 'vertical' as const }}
-            />
+            <label style={{ fontSize: 13, fontWeight: 600, color: '#555', display: 'block', marginBottom: 4 }}>Banner Text</label>
+            <textarea value={bannerText} onChange={(e: any) => setBannerText(e.target.value)} rows={4}
+              style={{ width: '100%', padding: 10, borderRadius: 8, border: '1px solid #ddd', fontSize: 14, boxSizing: 'border-box' as const, color: '#111', resize: 'vertical' as const }} />
           </div>
           <div>
-            <label style={{ fontSize: 13, fontWeight: 600, color: '#555', display: 'block', marginBottom: 4 }}>
-              Link URL (Mehr erfahren →)
-            </label>
-            <input
-              value={linkUrl}
-              onChange={(e: any) => setLinkUrl(e.target.value)}
-              placeholder="https://onlang-app.netlify.app"
-              style={{ width: '100%', padding: 10, borderRadius: 8, border: '1px solid #ddd', fontSize: 14, boxSizing: 'border-box' as const, color: '#111' }}
-            />
+            <label style={{ fontSize: 13, fontWeight: 600, color: '#555', display: 'block', marginBottom: 4 }}>Link URL</label>
+            <input value={linkUrl} onChange={(e: any) => setLinkUrl(e.target.value)} placeholder="https://..."
+              style={{ width: '100%', padding: 10, borderRadius: 8, border: '1px solid #ddd', fontSize: 14, boxSizing: 'border-box' as const, color: '#111' }} />
           </div>
         </div>
         {success && <p style={{ color: 'green', margin: '12px 0 0', fontSize: 14 }}>{success}</p>}
         {error && <p style={{ color: 'red', margin: '12px 0 0', fontSize: 14 }}>{error}</p>}
         <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
-          <button onClick={onClose} style={{ flex: 1, padding: 12, borderRadius: 10, border: '1px solid #ddd', background: 'white', cursor: 'pointer', fontSize: 15, color: '#111' }}>
-            Abbrechen
-          </button>
+          <button onClick={onClose} style={{ flex: 1, padding: 12, borderRadius: 10, border: '1px solid #ddd', background: 'white', cursor: 'pointer', fontSize: 15, color: '#111' }}>Abbrechen</button>
           <button onClick={handleSave} disabled={saving} style={{ flex: 2, padding: 12, borderRadius: 10, border: 'none', background: themaFarbe, color: 'white', fontWeight: 700, fontSize: 15, cursor: 'pointer' }}>
             {saving ? 'Speichern...' : '💾 Sponsor speichern'}
           </button>
@@ -310,7 +283,12 @@ const SponsorPopup: React.FC<{ kundenId: string; themaFarbe: string; onClose: ()
 type Props = { onAdminClick?: () => void };
 
 const Tab1: React.FC<Props> = ({ onAdminClick }) => {
-  const { branding, loading, reload, isAuthenticated } = useContext(BrandingContext);
+  const {
+    branding, loading, reload, isAuthenticated,
+    // NEU: Team-Login Werte
+    teamRolle, teamMannschaft, handleTeamLogout,
+  } = useContext(BrandingContext);
+
   const [beitraege, setBeitraege] = useState<any[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [showSponsorForm, setShowSponsorForm] = useState(false);
@@ -323,12 +301,32 @@ const Tab1: React.FC<Props> = ({ onAdminClick }) => {
   const [success, setSuccess] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [showBildInfo, setShowBildInfo] = useState(false);
-
-  // ── NEU: aktiver Kategorie-Filter ──────────────────────────
   const [activeKategorie, setActiveKategorie] = useState<string>('');
 
   const b = branding as any;
+
+  // ── Berechtigungen ─────────────────────────────────────────
+  // Hauptadmin (bestehendes System, unverändert)
   const isAdmin = !!b?.Passwort && isAuthenticated;
+
+  // NEU: Team-Rollen
+  const isTeamAdmin = teamRolle === 'admin';   // Hauptadmin via Team-Login
+  const isAbtl      = teamRolle === 'abtl';    // Abteilungsleiter
+  const isTeam      = teamRolle === 'team';    // Mannschaftsverantwortlicher
+
+  // Darf posten? admin, abtl und team dürfen alle posten
+  const canPost = isAdmin || isTeamAdmin || isAbtl || isTeam;
+
+  // Darf löschen? admin, abtl und teamAdmin dürfen alles löschen
+  // team darf nur eigene Beiträge löschen (Kategorie = eigene Mannschaft)
+  const canDelete = (beitrag: any): boolean => {
+    if (isAdmin || isTeamAdmin || isAbtl) return true;
+    if (isTeam) {
+      return String(beitrag.Kategorie || '').trim() === teamMannschaft;
+    }
+    return false;
+  };
+
   const themaFarbe = b?.Thema_Farbe || '#111111';
   const logoUrl = b?.Logo_verein || b?.Logo_Verein || '';
   const sponsorLogoUrl = b?.Logo_Sponsor || b?.Logo_sponsor || '';
@@ -341,6 +339,14 @@ const Tab1: React.FC<Props> = ({ onAdminClick }) => {
       return kat.split(',').map((k: string) => k.trim()).filter(Boolean);
     return ['News', 'Spiel', 'Training', 'Sonstiges'];
   }, [b?.Kategorien]);
+
+  // NEU: team sieht nur eigene Kategorie im Filter
+  const sichtbareKategorien: string[] = useMemo(() => {
+    if (isTeam && teamMannschaft) {
+      return kategorienFinal.filter(k => k === teamMannschaft);
+    }
+    return kategorienFinal;
+  }, [kategorienFinal, isTeam, teamMannschaft]);
 
   const ladeId = (b?.Parent_ID && String(b.Parent_ID).trim())
     ? String(b.Parent_ID).trim()
@@ -358,11 +364,17 @@ const Tab1: React.FC<Props> = ({ onAdminClick }) => {
   useEffect(() => { ladeBeitraege(); }, [ladeBeitraege]);
 
   useEffect(() => {
-    if (!kategorienFinal.length) return;
-    setKategorie(prev => (!prev || prev === 'News') ? kategorienFinal[0] : prev);
-  }, [kategorienFinal]);
+    if (!sichtbareKategorien.length) return;
+    // NEU: team startet direkt in eigener Kategorie
+    if (isTeam && teamMannschaft) {
+      setKategorie(teamMannschaft);
+      setActiveKategorie(teamMannschaft);
+    } else {
+      setKategorie(prev => (!prev || prev === 'News') ? sichtbareKategorien[0] : prev);
+    }
+  }, [sichtbareKategorien, isTeam, teamMannschaft]);
 
-  // ── Gefilterte Beiträge ────────────────────────────────────
+  // Gefilterte Beiträge
   const gefilterteBeitraege = useMemo(() => {
     if (!activeKategorie) return beitraege;
     return beitraege.filter(b =>
@@ -373,12 +385,16 @@ const Tab1: React.FC<Props> = ({ onAdminClick }) => {
   const handleSubmit = async () => {
     if (!titel || !text) return;
     setSaving(true);
+    // NEU: team postet immer in eigener Kategorie
+    const postKategorie = isTeam && teamMannschaft
+      ? teamMannschaft
+      : (kategorie || kategorienFinal[0] || 'News');
     try {
       const params = new URLSearchParams({
         action: 'add_beitrag', kundenId: branding?.Kunden_ID || '',
         vereinName: b?.Verein_Name || '', titel, text, bildUrl, videoUrl,
         datum: new Date().toLocaleDateString('de-DE'),
-        kategorie: kategorie || kategorienFinal[0] || 'News',
+        kategorie: postKategorie,
       });
       const data = await fetch(`${API_EXEC_URL}?${params}`).then(r => r.json());
       if (data.success) {
@@ -419,11 +435,7 @@ const Tab1: React.FC<Props> = ({ onAdminClick }) => {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       {showBildInfo && <InfoPopup onClose={() => setShowBildInfo(false)} />}
       {showSponsorForm && (
-        <SponsorPopup
-          kundenId={kundenId}
-          themaFarbe={themaFarbe}
-          onClose={() => setShowSponsorForm(false)}
-        />
+        <SponsorPopup kundenId={kundenId} themaFarbe={themaFarbe} onClose={() => setShowSponsorForm(false)} />
       )}
 
       <AppHeader
@@ -437,71 +449,94 @@ const Tab1: React.FC<Props> = ({ onAdminClick }) => {
       />
 
       <div style={{ flex: 1, overflowY: 'auto', padding: 16, backgroundColor: '#f0f0f0' }}>
+
+        {/* NEU: Team-Info Banner */}
+        {teamRolle && (
+          <div style={{
+            background: themaFarbe, borderRadius: 10, padding: '10px 14px',
+            marginBottom: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          }}>
+            <div>
+              <span style={{ color: 'white', fontWeight: 700, fontSize: 14 }}>
+                {teamRolle === 'admin' ? '👑 Hauptadmin' : teamRolle === 'abtl' ? '🏅 Abteilungsleiter' : `🏀 ${teamMannschaft}`}
+              </span>
+            </div>
+            <button onClick={handleTeamLogout} style={{
+              background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.4)',
+              color: 'white', borderRadius: 8, padding: '4px 10px', fontSize: 12, cursor: 'pointer',
+            }}>
+              Abmelden
+            </button>
+          </div>
+        )}
+
         {demoTage && (
           <div style={{ backgroundColor: '#f0a500', borderRadius: 10, padding: '12px 16px', marginBottom: 12, textAlign: 'center', fontWeight: 'bold', color: 'white', fontSize: 15 }}>
             ⏱ Demo läuft noch {demoTage} Tage
           </div>
         )}
 
-        {/* ── NEU: Dropdown-Filter ─────────────────────────── */}
-        {kategorienFinal.length > 0 && (
+        {sichtbareKategorien.length > 0 && (
           <CategoriesComponent
-            categories={kategorienFinal}
+            categories={sichtbareKategorien}
             selectedCategory={activeKategorie}
             onSelect={setActiveKategorie}
             themaFarbe={themaFarbe}
           />
         )}
 
-        {isAdmin && !showForm && (
+        {/* Buttons: canPost statt isAdmin */}
+        {canPost && !showForm && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
             <button onClick={() => setShowForm(true)} style={{ width: '100%', padding: 14, borderRadius: 10, backgroundColor: themaFarbe, border: 'none', color: 'white', fontWeight: 'bold', fontSize: 16, cursor: 'pointer' }}>
               ⊕ NEUEN BEITRAG ERSTELLEN
             </button>
-            <button onClick={() => setShowSponsorForm(true)} style={{ width: '100%', padding: 12, borderRadius: 10, backgroundColor: 'white', border: `2px solid ${themaFarbe}`, color: themaFarbe, fontWeight: 'bold', fontSize: 15, cursor: 'pointer' }}>
-              🤝 SPONSOR EINRICHTEN
-            </button>
+            {/* Sponsor nur für admin */}
+            {isAdmin && (
+              <button onClick={() => setShowSponsorForm(true)} style={{ width: '100%', padding: 12, borderRadius: 10, backgroundColor: 'white', border: `2px solid ${themaFarbe}`, color: themaFarbe, fontWeight: 'bold', fontSize: 15, cursor: 'pointer' }}>
+                🤝 SPONSOR EINRICHTEN
+              </button>
+            )}
           </div>
         )}
 
-        {isAdmin && showForm && (
+        {canPost && showForm && (
           <div style={{ background: '#f9f9f9', borderRadius: 12, padding: 16, marginBottom: 20, border: '1px solid #ddd' }}>
-            <h3 style={{ marginTop: 0 }}>📝 Neuer Beitrag</h3>
+            <h3 style={{ marginTop: 0 }}>
+              📝 Neuer Beitrag
+              {isTeam && teamMannschaft && (
+                <span style={{ fontSize: 13, fontWeight: 400, color: '#888', marginLeft: 8 }}>
+                  für {teamMannschaft}
+                </span>
+              )}
+            </h3>
             <input placeholder="Titel" value={titel} onChange={(e: any) => setTitel(e.target.value)}
               style={{ width: '100%', padding: 10, marginBottom: 8, borderRadius: 8, border: '1px solid #ccc', boxSizing: 'border-box' as const, color: '#111' }} />
             <textarea placeholder="Text" value={text} onChange={(e: any) => setText(e.target.value)} rows={4}
               style={{ width: '100%', padding: 10, marginBottom: 8, borderRadius: 8, border: '1px solid #ccc', boxSizing: 'border-box' as const, color: '#111' }} />
             <div style={{ position: 'relative', marginBottom: 8 }}>
-              <input
-                placeholder="Bild URL (optional)"
-                value={bildUrl}
-                onChange={(e: any) => setBildUrl(e.target.value)}
-                style={{ width: '100%', padding: 10, paddingRight: 44, borderRadius: 8, border: '1px solid #ccc', boxSizing: 'border-box' as const, color: '#111' }}
-              />
-              <button
-                onClick={() => setShowBildInfo(true)}
-                title="Wie lade ich ein Bild hoch?"
-                style={{
-                  position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)',
-                  width: 28, height: 28, borderRadius: '50%', border: '2px solid #ccc',
-                  background: 'white', color: '#888', fontWeight: 700, fontSize: 14,
-                  cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  lineHeight: 1,
-                }}
-              >?</button>
+              <input placeholder="Bild URL (optional)" value={bildUrl} onChange={(e: any) => setBildUrl(e.target.value)}
+                style={{ width: '100%', padding: 10, paddingRight: 44, borderRadius: 8, border: '1px solid #ccc', boxSizing: 'border-box' as const, color: '#111' }} />
+              <button onClick={() => setShowBildInfo(true)} title="Wie lade ich ein Bild hoch?"
+                style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', width: 28, height: 28, borderRadius: '50%', border: '2px solid #ccc', background: 'white', color: '#888', fontWeight: 700, fontSize: 14, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}>
+                ?
+              </button>
             </div>
-            <div style={{ position: 'relative', marginBottom: 8 }}>
-              <input
-                placeholder="▶ YouTube URL (optional)"
-                value={videoUrl}
-                onChange={(e: any) => setVideoUrl(e.target.value)}
-                style={{ width: '100%', padding: 10, borderRadius: 8, border: '1px solid #ccc', boxSizing: 'border-box' as const, color: '#111' }}
-              />
-            </div>
-            <select value={kategorie || kategorienFinal[0]} onChange={(e: any) => setKategorie(e.target.value)}
-              style={{ width: '100%', padding: 10, marginBottom: 12, borderRadius: 8, border: '1px solid #ccc', color: '#111' }}>
-              {kategorienFinal.map(k => <option key={k} value={k}>{k}</option>)}
-            </select>
+            <input placeholder="▶ YouTube URL (optional)" value={videoUrl} onChange={(e: any) => setVideoUrl(e.target.value)}
+              style={{ width: '100%', padding: 10, marginBottom: 8, borderRadius: 8, border: '1px solid #ccc', boxSizing: 'border-box' as const, color: '#111' }} />
+
+            {/* Kategorie-Auswahl: team sieht nur eigene, andere sehen alle */}
+            {isTeam && teamMannschaft ? (
+              <div style={{ padding: '10px 12px', marginBottom: 12, borderRadius: 8, border: '1px solid #ccc', background: '#f0f0f0', color: '#555', fontSize: 14 }}>
+                Kategorie: <strong>{teamMannschaft}</strong>
+              </div>
+            ) : (
+              <select value={kategorie || kategorienFinal[0]} onChange={(e: any) => setKategorie(e.target.value)}
+                style={{ width: '100%', padding: 10, marginBottom: 12, borderRadius: 8, border: '1px solid #ccc', color: '#111' }}>
+                {kategorienFinal.map(k => <option key={k} value={k}>{k}</option>)}
+              </select>
+            )}
+
             {success && <p style={{ color: 'green' }}>{success}</p>}
             <div style={{ display: 'flex', gap: 8 }}>
               <button onClick={() => setShowForm(false)} style={{ flex: 1, padding: 12, borderRadius: 8, border: '1px solid #ccc', backgroundColor: 'white', cursor: 'pointer', color: '#111' }}>
@@ -525,9 +560,10 @@ const Tab1: React.FC<Props> = ({ onAdminClick }) => {
             const buttonUrl = beitrag.youtubeUrl || beitrag.Video_URL || beitrag.videoUrl || beitrag.Bild_URL || '';
             const bId = String(beitrag.id || beitrag.Id || '');
             const isDeleting = deletingId === bId;
+            const darfLoeschen = canDelete(beitrag);
             return (
               <div key={bId || i} style={{ background: 'white', borderRadius: 12, padding: 16, marginBottom: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', position: 'relative' }}>
-                {isAdmin && (
+                {darfLoeschen && (
                   <button onClick={() => handleDelete(beitrag)} disabled={isDeleting} title="Beitrag löschen"
                     style={{ position: 'absolute', top: 12, right: 12, background: isDeleting ? '#ccc' : '#ff4444', color: 'white', border: 'none', borderRadius: 8, padding: '4px 10px', fontSize: 13, cursor: isDeleting ? 'default' : 'pointer', fontWeight: 'bold', zIndex: 1 }}>
                     {isDeleting ? '...' : '🗑️'}
@@ -539,7 +575,7 @@ const Tab1: React.FC<Props> = ({ onAdminClick }) => {
                   </div>
                 )}
                 <div style={{ fontSize: 12, color: '#999', marginBottom: 6 }}>{beitrag.Kategorie} • {beitrag.Datum}</div>
-                <h3 style={{ margin: '0 0 10px 0', fontSize: 24, lineHeight: 1.25, color: '#222', paddingRight: isAdmin ? 44 : 0 }}>{beitrag.Titel}</h3>
+                <h3 style={{ margin: '0 0 10px 0', fontSize: 24, lineHeight: 1.25, color: '#222', paddingRight: darfLoeschen ? 44 : 0 }}>{beitrag.Titel}</h3>
                 <p style={{ margin: 0, color: '#555', fontSize: 16, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{beitrag.Text}</p>
                 {embedUrl && (
                   <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, marginTop: 12, borderRadius: 8, overflow: 'hidden' }}>
